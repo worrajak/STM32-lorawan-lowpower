@@ -171,7 +171,7 @@ void os_getDevKey (u1_t* buf) { }
 
 static osjob_t sendjob;
 
-// Pin mapping
+// Pin mapping USING SPI2 
 const lmic_pinmap lmic_pins = {
   .nss = PB12,
   .rxtx = LMIC_UNUSED_PIN,
