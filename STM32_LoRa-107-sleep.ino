@@ -23,13 +23,13 @@ uint8_t hum_int = 0;
 #define USE_SPI   2
 
 // LoRaWAN NwkSKey, your network session key, 16 bytes (from staging.thethingsnetwork.org)
-static unsigned char NWKSKEY[16] = { 0x18, 0x47, 0x12, 0x64, 0x64, 0xDB, 0x13, 0x09, 0x36, 0xFE, 0x21, 0xE6, 0x41, 0x6D, 0xB1, 0xBD };
+static unsigned char NWKSKEY[16] = { 0x00, 0x00, 0x12, 0x64, 0x64, 0xDB, 0x13, 0x09, 0x36, 0xFE, 0x21, 0xE6, 0x41, 0x6D, 0xB1, 0xBD };
 
 // LoRaWAN AppSKey, application session key, 16 bytes  (from staging.thethingsnetwork.org)
-static unsigned char APPSKEY[16] = { 0x59, 0x4B, 0xDB, 0x8F, 0x19, 0x4B, 0x12, 0x9A, 0x18, 0x43, 0xEE, 0x5B, 0x8E, 0xD1, 0xD9, 0x38 };
+static unsigned char APPSKEY[16] = { 0x00, 0x00, 0xDB, 0x8F, 0x19, 0x4B, 0x12, 0x9A, 0x18, 0x43, 0xEE, 0x5B, 0x8E, 0xD1, 0xD9, 0x38 };
 
 // LoRaWAN end-device address (DevAddr), ie 0x91B375AC  (from staging.thethingsnetwork.org)
-static const u4_t DEVADDR = 0x260419C7 ; // <-- Change this address for every node!
+static const u4_t DEVADDR = 0x26040000 ; // <-- Change this address for every node!
 
 
 // STM32 Unique Chip IDs
@@ -308,7 +308,7 @@ void readData()
     tempC_int = temperature*10;
     hum_int = humidity*2;
     adc_enable(ADC1);
-    vbat_int = 120 * 4096 / adc_read(ADC1, 17);
+    vbat_int = 120 * 4096 / adc_read(ADC1, 17); //read vcc internal 
     adc_disable(ADC1);
     mydata.temp[0] = tempC_int >> 8;
     mydata.temp[1] = tempC_int;
@@ -335,8 +335,8 @@ void allInput()
   pinMode(PA6, INPUT_ANALOG);
   pinMode(PA7, INPUT_ANALOG);
   pinMode(PA8, INPUT_ANALOG);
-  //pinMode(PA9, INPUT_ANALOG);
-  //pinMode(PA10, INPUT_ANALOG);
+  pinMode(PA9, INPUT_ANALOG);
+  pinMode(PA10, INPUT_ANALOG);
   
   pinMode(PA11, INPUT_ANALOG);
   pinMode(PA12, INPUT_ANALOG);
@@ -345,17 +345,17 @@ void allInput()
   pinMode(PA15, INPUT_ANALOG);
 
   pinMode(PB0, INPUT_ANALOG);
-  //pinMode(PB1, INPUT_ANALOG);
+  pinMode(PB1, INPUT_ANALOG);
   pinMode(PB2, INPUT_ANALOG);
   pinMode(PB3, INPUT_ANALOG);
   pinMode(PB4, INPUT_ANALOG);
   pinMode(PB5, INPUT_ANALOG);
-  //pinMode(PB6, INPUT_ANALOG);
-  //pinMode(PB7, INPUT_ANALOG);
+  pinMode(PB6, INPUT_ANALOG);
+  pinMode(PB7, INPUT_ANALOG);
   pinMode(PB8, INPUT_ANALOG);
   pinMode(PB9, INPUT_ANALOG);
-  //pinMode(PB10, INPUT_ANALOG);
-  //pinMode(PB11, INPUT_ANALOG);
+  pinMode(PB10, INPUT_ANALOG);
+  pinMode(PB11, INPUT_ANALOG);
   pinMode(PB12, INPUT_ANALOG);
   pinMode(PB13, INPUT_ANALOG);
   pinMode(PB14, INPUT_ANALOG);
@@ -386,6 +386,7 @@ bool status = bme.begin();
   LMIC_reset();
 
   LMIC_setSession (0x1, DEVADDR, NWKSKEY, APPSKEY);
+  
   LMIC_setupChannel(0, 923200000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
   LMIC_setupChannel(1, 923400000, DR_RANGE_MAP(DR_SF12, DR_SF7B), BAND_CENTI);      // g-band
   LMIC_setupChannel(2, 923600000, DR_RANGE_MAP(DR_SF12, DR_SF7),  BAND_CENTI);      // g-band
